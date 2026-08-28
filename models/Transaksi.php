@@ -1,6 +1,6 @@
 <?php
 // models/Transaksi.php
-// Model untuk tabel: transaksi
+// Model untuk tabel: transaksi (versi PDO)
 // Membutuhkan models/Sparepart.php untuk update stok otomatis
 
 require_once "Sparepart.php";
@@ -11,57 +11,65 @@ function getAllTransaksi($koneksi) {
             FROM transaksi t
             JOIN sparepart s ON t.id_sparepart = s.id_sparepart
             ORDER BY t.tanggal DESC";
-    return mysqli_query($koneksi, $sql);
+    $stmt = $koneksi->prepare($sql);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 // Ambil riwayat transaksi untuk 1 sparepart tertentu
 function getTransaksiBySparepart($koneksi, $id_sparepart) {
-    $sql = "SELECT * FROM transaksi WHERE id_sparepart = ? ORDER BY tanggal DESC";
-    $stmt = mysqli_prepare($koneksi, $sql);
-    mysqli_stmt_bind_param($stmt, "i", $id_sparepart);
-    mysqli_stmt_execute($stmt);
-    return mysqli_stmt_get_result($stmt);
+    $sql = "SELECT * FROM transaksi WHERE id_sparepart = :id_sparepart ORDER BY tanggal DESC";
+    $stmt = $koneksi->prepare($sql);
+    $stmt->bindParam(':id_sparepart', $id_sparepart, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 // Catat transaksi barang MASUK + otomatis tambah stok sparepart
 function catatBarangMasuk($koneksi, $id_sparepart, $jumlah, $keterangan, $petugas) {
-    mysqli_begin_transaction($koneksi);
+    $koneksi->beginTransaction();
     try {
         $sql = "INSERT INTO transaksi (id_sparepart, jenis, jumlah, keterangan, petugas) 
-                VALUES (?, 'masuk', ?, ?, ?)";
-        $stmt = mysqli_prepare($koneksi, $sql);
-        mysqli_stmt_bind_param($stmt, "iiss", $id_sparepart, $jumlah, $keterangan, $petugas);
-        mysqli_stmt_execute($stmt);
+                VALUES (:id_sparepart, 'masuk', :jumlah, :keterangan, :petugas)";
+        $stmt = $koneksi->prepare($sql);
+        $stmt->bindParam(':id_sparepart', $id_sparepart, PDO::PARAM_INT);
+        $stmt->bindParam(':jumlah', $jumlah, PDO::PARAM_INT);
+        $stmt->bindParam(':keterangan', $keterangan, PDO::PARAM_STR);
+        $stmt->bindParam(':petugas', $petugas, PDO::PARAM_STR);
+        $stmt->execute();
 
         tambahStok($koneksi, $id_sparepart, $jumlah);
 
-        mysqli_commit($koneksi);
+        $koneksi->commit();
         return true;
     } catch (Exception $e) {
-        mysqli_rollback($koneksi);
+        $koneksi->rollBack();
         return false;
     }
 }
 
 // Catat transaksi barang KELUAR + otomatis kurangi stok sparepart
 function catatBarangKeluar($koneksi, $id_sparepart, $jumlah, $keterangan, $petugas) {
-    mysqli_begin_transaction($koneksi);
+    $koneksi->beginTransaction();
     try {
         $sql = "INSERT INTO transaksi (id_sparepart, jenis, jumlah, keterangan, petugas) 
-                VALUES (?, 'keluar', ?, ?, ?)";
-        $stmt = mysqli_prepare($koneksi, $sql);
-        mysqli_stmt_bind_param($stmt, "iiss", $id_sparepart, $jumlah, $keterangan, $petugas);
-        mysqli_stmt_execute($stmt);
+                VALUES (:id_sparepart, 'keluar', :jumlah, :keterangan, :petugas)";
+        $stmt = $koneksi->prepare($sql);
+        $stmt->bindParam(':id_sparepart', $id_sparepart, PDO::PARAM_INT);
+        $stmt->bindParam(':jumlah', $jumlah, PDO::PARAM_INT);
+        $stmt->bindParam(':keterangan', $keterangan, PDO::PARAM_STR);
+        $stmt->bindParam(':petugas', $petugas, PDO::PARAM_STR);
+        $stmt->execute();
 
-        $berhasil = kurangiStok($koneksi, $id_sparepart, $jumlah);
-        if (!$berhasil || mysqli_affected_rows($koneksi) === 0) {
+        $baris_terupdate = kurangiStok($koneksi, $id_sparepart, $jumlah);
+        if ($baris_terupdate === 0) {
             throw new Exception("Stok tidak mencukupi");
         }
 
-        mysqli_commit($koneksi);
+        $koneksi->commit();
         return true;
     } catch (Exception $e) {
-        mysqli_rollback($koneksi);
+        $koneksi->rollBack();
         return false;
     }
 }
