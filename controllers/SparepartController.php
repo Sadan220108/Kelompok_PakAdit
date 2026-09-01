@@ -20,7 +20,7 @@ class SparepartController
         }
 
         $data_sparepart = getAllSparepart($this->db);
-        include 'app/views/sparepart/index.php';
+        include __DIR__ . '/../views/sparepart/index.php';
     }
 
     public function tambah()
@@ -30,7 +30,7 @@ class SparepartController
             exit;
         }
 
-        include 'app/views/sparepart/tambah.php';
+        include __DIR__ . '/../views/sparepart/tambah.php';
     }
 
     public function tambahproses()
@@ -96,7 +96,7 @@ class SparepartController
             die("Error: Sparepart tidak ditemukan.");
         }
 
-        include 'app/views/sparepart/edit.php';
+        include __DIR__ . '/../views/sparepart/edit.php';
     }
 
     public function editproses()
@@ -160,7 +160,7 @@ class SparepartController
         $batas = 5;
         $data_sparepart = getSparepartStokMenipis($this->db, $batas);
 
-        include 'app/views/sparepart/stokmenipis.php';
+        include __DIR__ . '/../views/sparepart/stokmenipis.php';
     }
 
     public function hapus()

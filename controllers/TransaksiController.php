@@ -1,8 +1,8 @@
-```php
 <?php
 
 include_once __DIR__ . '/../config/database.php';
 include_once __DIR__ . '/../models/Transaksi.php';
+
 
 class TransaksiController
 {
@@ -24,7 +24,7 @@ class TransaksiController
 
         $data_transaksi = getAllTransaksi($this->db);
 
-        include 'app/views/transaksi/index.php';
+        include __DIR__ . '/../views/transaksi/index.php';
     }
 
     // Menampilkan riwayat transaksi berdasarkan sparepart
@@ -46,7 +46,7 @@ class TransaksiController
             $id_sparepart
         );
 
-        include 'app/views/transaksi/detail.php';
+        include __DIR__ . '/../views/transaksi/detail.php';
     }
 
     // Menampilkan form tambah transaksi
@@ -57,7 +57,7 @@ class TransaksiController
             exit;
         }
 
-        include 'app/views/transaksi/tambah.php';
+        include __DIR__ . '/../views/transaksi/tambah.php';
     }
 
     // Proses transaksi barang masuk / keluar

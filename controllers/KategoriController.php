@@ -17,7 +17,7 @@ class KategoriController
             exit;
         }
         $data_kategori = getAllKategori($this->db);
-        include 'app/views/kategori/index.php';
+        include __DIR__ . '/../views/kategori/index.php';
     }
     public function tambah()
     {
@@ -25,7 +25,7 @@ class KategoriController
             header("Location: index.php");
             exit;
         }
-        include 'app/views/kategori/tambah.php';
+        include __DIR__ . '/../views/kategori/tambah.php';
     }
     public function tambahproses()
     {
@@ -79,7 +79,7 @@ class KategoriController
             die("Error: Kategori tidak ditemukan.");
         }
 
-        include 'app/views/kategori/edit.php';
+        include __DIR__ . '/../views/kategori/edit.php';
     }
     public function editproses()
     {
