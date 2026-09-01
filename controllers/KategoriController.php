@@ -1,6 +1,6 @@
 <?php
-include_once 'config/database.php';
-include_once 'app/models/Kategori.php';
+include_once __DIR__ . '/../config/database.php';
+include_once __DIR__ . '/../models/Kategori.php';
 
 class KategoriController
 {
