@@ -1,0 +1,59 @@
+<?php
+$error = $_SESSION['error_msg'] ?? '';
+unset($_SESSION['error_msg']);
+?>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Tambah Sparepart</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-4">
+
+    <h3 class="mb-3">Tambah Sparepart</h3>
+
+    <?php if ($error): ?>
+        <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
+    <?php endif; ?>
+
+    <form action="index.php?act=sparepart-tambahproses" method="POST">
+
+        <div class="mb-3">
+            <label class="form-label">Kode Barang</label>
+            <input type="text" name="kode_barang" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Nama Barang</label>
+            <input type="text" name="nama_barang" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Kategori</label>
+            <select name="id_kategori" class="form-select" required>
+                <option value="">-- Pilih Kategori --</option>
+                <?php if (!empty($data_kategori)): ?>
+                    <?php foreach ($data_kategori as $k): ?>
+                        <option value="<?= $k['id_kategori'] ?>">
+                            <?= htmlspecialchars($k['nama_kategori']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Stok Awal</label>
+            <input type="number" name="stok" class="form-control" min="0" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Simpan</button>
+        <a href="index.php?act=sparepart" class="btn btn-secondary">Batal</a>
+
+    </form>
+
+</div>
+</body>
+</html>

@@ -1,3 +1,8 @@
+<?php
+$success = $_SESSION['success_msg'] ?? '';
+$error   = $_SESSION['error_msg'] ?? '';
+unset($_SESSION['success_msg'], $_SESSION['error_msg']);
+?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -6,6 +11,13 @@
     <style>
         body { font-family: Arial, sans-serif; margin: 30px; background: #f4f4f4; }
         h1 { color: #333; }
+        .alert {
+            padding: 10px 14px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        .alert-success { background: #d4edda; color: #155724; }
+        .alert-danger { background: #f8d7da; color: #721c24; }
         .btn {
             display: inline-block;
             padding: 8px 14px;
@@ -39,7 +51,14 @@
 
     <h1>Data Kategori Sparepart</h1>
 
-    <a class="btn" href="index.php?controller=kategori&action=create">+ Tambah Kategori</a>
+    <?php if ($success): ?>
+        <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
+    <?php endif; ?>
+    <?php if ($error): ?>
+        <div class="alert alert-danger"><?= $error ?></div>
+    <?php endif; ?>
+
+    <a class="btn" href="index.php?act=kategori-tambah">+ Tambah Kategori</a>
 
     <table>
         <thead>
@@ -50,15 +69,15 @@
             </tr>
         </thead>
         <tbody>
-            <?php if (!empty($kategoris)): ?>
+            <?php if (!empty($data_kategori)): ?>
                 <?php $no = 1; ?>
-                <?php foreach ($kategoris as $kategori): ?>
+                <?php foreach ($data_kategori as $kategori): ?>
                     <tr>
                         <td><?= $no++ ?></td>
                         <td><?= htmlspecialchars($kategori['nama_kategori']) ?></td>
                         <td class="aksi">
-                            <a class="edit" href="index.php?controller=kategori&action=edit&id=<?= $kategori['id_kategori'] ?>">Edit</a>
-                            <a class="hapus" href="index.php?controller=kategori&action=delete&id=<?= $kategori['id_kategori'] ?>"
+                            <a class="edit" href="index.php?act=kategori-edit&id=<?= $kategori['id_kategori'] ?>">Edit</a>
+                            <a class="hapus" href="index.php?act=kategori-hapus&id=<?= $kategori['id_kategori'] ?>"
                                onclick="return confirm('Yakin hapus kategori ini?')">Hapus</a>
                         </td>
                     </tr>
