@@ -2,6 +2,7 @@
 
 include_once __DIR__ . '/../config/database.php';
 include_once __DIR__ . '/../models/Transaksi.php';
+include_once __DIR__ . '/../models/Sparepart.php';
 
 
 class TransaksiController
@@ -57,6 +58,7 @@ class TransaksiController
             exit;
         }
 
+        $data_sparepart = getAllSparepart($this->db);
         include __DIR__ . '/../views/transaksi/tambah.php';
     }
 

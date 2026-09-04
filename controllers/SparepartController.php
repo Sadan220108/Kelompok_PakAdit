@@ -2,6 +2,7 @@
 
 include_once __DIR__ . '/../config/database.php';
 include_once __DIR__ . '/../models/Sparepart.php';
+include_once __DIR__ . '/../models/Kategori.php';
 class SparepartController
 {
     private $db;
@@ -30,6 +31,7 @@ class SparepartController
             exit;
         }
 
+        $data_kategori = getAllKategori($this->db);
         include __DIR__ . '/../views/sparepart/tambah.php';
     }
 
@@ -96,6 +98,7 @@ class SparepartController
             die("Error: Sparepart tidak ditemukan.");
         }
 
+        $data_kategori = getAllKategori($this->db);
         include __DIR__ . '/../views/sparepart/edit.php';
     }
 

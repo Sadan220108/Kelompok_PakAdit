@@ -46,7 +46,7 @@ class KategoriController
                     }
                 }
                 if ($kategori_sudah_ada) {
-                    $_SESSION['error_msg'] = "Gagal: Kategori '<b>". htmlspecialchars($nama) . "<b>' sudah ada!";
+                    $_SESSION['error_msg'] = "Gagal: Kategori '<b>". htmlspecialchars($nama) . "</b>' sudah ada!";
                     header('Location: index.php?act=kategori-tambah');
                     exit;
                 }else{
